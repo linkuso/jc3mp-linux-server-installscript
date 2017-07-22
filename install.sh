@@ -26,8 +26,12 @@ else
         useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
 fi
 
-su "$username" -c "mkdir /home/'$username'/jc3mp/
-su "$username" -c "mkdir /home/'$username'/jc3mp/'$svalias'"
+if [ -d /home/'$username'/jc3mp/'$svalias' ]; then
+  echo "you already have a server with that alias"
+  exit 0
+fi
+
+su "$username" -c "mkdir -p /home/'$username'/jc3mp/'$svalias'"
 su "$username" -c "steamcmd +login anonymous +exit"
 su "$username" -c "steamcmd +login anonymous +force_install_dir /home/'$username'/jc3mp/"$svalias" +app_update 619960 validate +exit"
  
