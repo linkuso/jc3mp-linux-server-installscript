@@ -69,17 +69,17 @@ cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
     "announce": true,
     "description": "$svdesc",
     "host": "$ip",
-    "httpPort": "$((baseport + 3))",
+    "httpPort": $((baseport + 3)),
     "logLevel": 7,
     "logo": "",
     "maxPlayers": 32,
     "maxTickRate": 60,
     "name": "$svname",
     "password": "",
-    "port": "$baseport",
-    "queryPort": "$((baseport + 1))",
+    "port": $baseport,
+    "queryPort": $((baseport + 1)),
     "requiredDLC": [],
-    "steamPort": "$((baseport + 2))"
+    "steamPort": $((baseport + 2))
 }
 EOF
 
