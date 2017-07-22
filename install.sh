@@ -57,8 +57,8 @@ cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
 }
 EOF
 
-sed -i "/admins: \[/a \\\t'$steamid'," /home/"$username"/jc3mp/packages/freeroam/gm/config.js
-sed -i "/death_reasons: \[/a \\\t'tickled the belly of',\n \\t'popped a cherry in',\n \\t'fragged',\n \\t'mutilated',\n \\t'720 noscoped',\n \\t'gatted',\n \\t'bamboozled',\n \\t'mullered',\n \\t'inflicted mortal damage upon',\n \\t'erased',\n \\t'julienned',\n \\t'killded',\n \\t'punctured',\n \\t'perforated',\n \\t'deaded'," /home/"$username"/jc3mp/packages/freeroam/gm/config.js
+sed -i "/admins: \[/a \\\t'$steamid'," /home/"$username"/jc3mp/"$svalias"/packages/freeroam/gm/config.js
+sed -i "/death_reasons: \[/a \\\t'tickled the belly of',\n \\t'popped a cherry in',\n \\t'fragged',\n \\t'mutilated',\n \\t'720 noscoped',\n \\t'gatted',\n \\t'bamboozled',\n \\t'mullered',\n \\t'inflicted mortal damage upon',\n \\t'erased',\n \\t'julienned',\n \\t'killded',\n \\t'punctured',\n \\t'perforated',\n \\t'deaded'," /home/"$username"/jc3mp/"$svalias"/packages/freeroam/gm/config.js
 
 
 chown -R "$username":users /home/"$username"/jc3mp
