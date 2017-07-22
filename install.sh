@@ -23,7 +23,7 @@ if id "$username" >/dev/null 2>&1; then
         echo "user already exists"
 else
         echo "creating user $username"
-        useradd -m -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
+        useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
 fi
 
 if [ -d /home/'$username'/jc3mp/'$svalias' ]; then
@@ -84,6 +84,7 @@ sed -i "/admins: \[/a \\\t'$adminsteamid'," /home/"$username"/jc3mp/"$svalias"/p
 sed -i "/death_reasons: \[/a \\\t'tickled the belly of',\n \\t'popped a cherry in',\n \\t'fragged',\n \\t'mutilated',\n \\t'720 noscoped',\n \\t'gatted',\n \\t'bamboozled',\n \\t'mullered',\n \\t'inflicted mortal damage upon',\n \\t'erased',\n \\t'julienned',\n \\t'killded',\n \\t'punctured',\n \\t'perforated',\n \\t'deaded'," /home/"$username"/jc3mp/"$svalias"/packages/freeroam/gm/config.js
 
 cat >> /etc/monit/monitrc <<EOF
+
 check process jc3mpServer_$svalias with pidfile /home/$username/jc3mp/$svalias/monit/$svalias.pid
 start program = "/bin/su $username -c '/home/$username/jc3mp/$svalias/monit/$svalias.sh start'"
 stop program = "/bin/su $username -c '/home/$username/jc3mp/$svalias/monit/$svalias.sh stop'"
