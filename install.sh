@@ -2,7 +2,7 @@
 # init
 
 apt-get update && apt-get upgrade -y
-apt-get install lib32gcc1 steamcmd git screen monit lib32gcc1 -y
+apt-get install lib32gcc1 git screen monit lib32gcc1 -y
 
 echo "Specify username"
 read username
@@ -31,9 +31,17 @@ if [ -d /home/'$username'/jc3mp/'$svalias' ]; then
   exit 0
 fi
 
+
+
 su "$username" -c "mkdir -p /home/'$username'/jc3mp/'$svalias'"
-su "$username" -c "steamcmd +login anonymous +exit"
-su "$username" -c "steamcmd +login anonymous +force_install_dir /home/'$username'/jc3mp/"$svalias" +app_update 619960 validate +exit"
+
+if ![ -d /home/'$username'/jc3mp/'$svalias' ]; then
+  su "$username" -c "mkdir -p /home/'$username'/steamcmd"
+  curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar -xzv -C /home/'$username'/steamcmd
+fi
+
+su "$username" -c "/home/'$username'/steamcmd/steamcmd +login anonymous +exit"
+su "$username" -c "/home/'$username'/steamcmd/steamcmd +login anonymous +force_install_dir /home/'$username'/jc3mp/"$svalias" +app_update 619960 validate +exit"
  
 mkdir /home/"$username"/jc3mp/"$svalias"/packages
 cd /home/"$username"/jc3mp/"$svalias"/packages
