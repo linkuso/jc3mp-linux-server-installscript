@@ -35,7 +35,7 @@ fi
 
 su "$username" -c "mkdir -p /home/'$username'/jc3mp/'$svalias'"
 
-if ![ -d /home/'$username'/jc3mp/'$svalias' ]; then
+if [ ! -d /home/'$username'/jc3mp/'$svalias' ]; then
   su "$username" -c "mkdir -p /home/'$username'/steamcmd"
   curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar -xzv -C /home/'$username'/steamcmd
 fi
