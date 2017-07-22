@@ -34,7 +34,9 @@ git clone https://gitlab.nanos.io/jc3mp-packages/command-manager
 git clone https://gitlab.nanos.io/jc3mp-packages/chat
  
 mkdir /home/"$username"/jc3mp/"$svalias"/monit
-touch /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".pid /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".log
+git clone https://github.com/TarryPaloma/jc3mp-linux-server-monit /home/"$username"/jc3mp/"$svalias"/monit
+mv /home/"$username"/jc3mp/"$svalias"/monit/alias.sh /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh
+touch /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".pid /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".log
  
 cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
 {
