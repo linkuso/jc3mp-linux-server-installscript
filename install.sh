@@ -46,7 +46,7 @@ git clone https://gitlab.nanos.io/jc3mp-packages/chat
 mkdir /home/"$username"/jc3mp/"$svalias"/monit
 git clone https://github.com/TarryPaloma/jc3mp-linux-server-monit /home/"$username"/jc3mp/"$svalias"/monit
 sed -i "s/NAME='replaceme'/NAME='$svalias'/" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
-sed -i "s/DIR=\/home\/'replaceme'\/jc3mp\/'replaceme'/DIR=\/home\/$username/jc3mp/$svalias" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
+sed -i "s/DIR=\/home\/'replaceme'\/jc3mp\/'replaceme'/DIR=\/home\/$username\/jc3mp\/$svalias" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
 mv /home/"$username"/jc3mp/"$svalias"/monit/alias.sh /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh
 touch /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".pid /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".log
 
