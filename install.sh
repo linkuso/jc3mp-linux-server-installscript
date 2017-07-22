@@ -2,7 +2,7 @@
 # init
 
 apt-get update && apt-get upgrade -y
-apt-get install lib32gcc1 git screen monit lib32gcc1 -y
+apt-get install lib32gcc1 git screen monit -y
 
 echo "Specify username"
 read username
@@ -23,7 +23,7 @@ if id "$username" >/dev/null 2>&1; then
         echo "user already exists"
 else
         echo "creating user $username"
-        useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
+        useradd -m -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
 fi
 
 if [ -d /home/'$username'/jc3mp/'$svalias' ]; then
