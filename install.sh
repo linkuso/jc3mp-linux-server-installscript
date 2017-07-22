@@ -16,7 +16,7 @@ echo "Specify server name"
 read svname
 echo "Specify admin steam id (get your steam id from http://steamidfinder.com/)"
 read adminsteamid
-echo "Specify server alias - useful if you want to run multiple servers"
+echo "Specify server alias - use differnet names for multiple servers"
 read svalias
  
 useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
