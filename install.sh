@@ -90,5 +90,8 @@ start program = "/bin/su $username -c '/home/$username/jc3mp/$svalias/monit/$sva
 stop program = "/bin/su $username -c '/home/$username/jc3mp/$svalias/monit/$svalias.sh stop'"
 EOF
 
+service monit stop
+service monit start
+
 chown -R "$username":users /home/"$username"/jc3mp
 su "$username"
