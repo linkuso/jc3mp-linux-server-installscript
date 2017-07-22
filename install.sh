@@ -18,9 +18,14 @@ echo "Specify admin steam id (get your steam id from http://steamidfinder.com/)"
 read adminsteamid
 echo "Specify server alias - use differnet names for multiple servers"
 read svalias
- 
-useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
-adduser "$username"
+
+if id "$username" >/dev/null 2>&1; then
+        echo "user already exists"
+else
+        echo "creating user $username"
+        useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
+fi
+
 su "$username" -c "mkdir /home/'$username'/jc3mp/'$svalias'"
 su "$username" -c "steamcmd +login anonymous +exit"
 su "$username" -c "steamcmd +login anonymous +force_install_dir /home/'$username'/jc3mp/"$svalias" +app_update 619960 validate +exit"
