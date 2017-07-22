@@ -1,90 +1,284 @@
-#!/bin/bash
-# init
+###############################################################################
+## Monit control file
+###############################################################################
+##
+## Comments begin with a '#' and extend through the end of the line. Keywords
+## are case insensitive. All path's MUST BE FULLY QUALIFIED, starting with '/'.
+##
+## Below you will find examples of some frequently used statements. For 
+## information about the control file and a complete list of statements and 
+## options, please have a look in the Monit manual.
+##
+##
+###############################################################################
+## Global section
+###############################################################################
+##
+## Start Monit in the background (run as a daemon):
+#
+  set daemon 15            # check services at 2-minute intervals
+#   with start delay 240    # optional: delay the first check by 4-minutes (by 
+#                           # default Monit check immediately after Monit start)
+#
+#
+## Set syslog logging with the 'daemon' facility. If the FACILITY option is
+## omitted, Monit will use 'user' facility by default. If you want to log to 
+## a standalone log file instead, specify the full path to the log file
+#
+# set logfile syslog facility log_daemon                       
+  set logfile /var/log/monit.log
+#
+#
+## Set the location of the Monit lock file which stores the process id of the
+## running Monit instance. By default this file is stored in $HOME/.monit.pid
+#
+# set pidfile /var/run/monit.pid
+#
+## Set the location of the Monit id file which stores the unique id for the
+## Monit instance. The id is generated and stored on first Monit start. By 
+## default the file is placed in $HOME/.monit.id.
+#
+# set idfile /var/.monit.id
+  set idfile /var/lib/monit/id
+#
+## Set the location of the Monit state file which saves monitoring states
+## on each cycle. By default the file is placed in $HOME/.monit.state. If
+## the state file is stored on a persistent filesystem, Monit will recover
+## the monitoring state across reboots. If it is on temporary filesystem, the
+## state will be lost on reboot which may be convenient in some situations.
+#
+  set statefile /var/lib/monit/state
+#
+## Set the list of mail servers for alert delivery. Multiple servers may be 
+## specified using a comma separator. If the first mail server fails, Monit 
+# will use the second mail server in the list and so on. By default Monit uses 
+# port 25 - it is possible to override this with the PORT option.
+#
+# set mailserver mail.bar.baz,               # primary mailserver
+#                backup.bar.baz port 10025,  # backup mailserver on port 10025
+#                localhost                   # fallback relay
+#
+#
+## By default Monit will drop alert events if no mail servers are available. 
+## If you want to keep the alerts for later delivery retry, you can use the 
+## EVENTQUEUE statement. The base directory where undelivered alerts will be 
+## stored is specified by the BASEDIR option. You can limit the queue size 
+## by using the SLOTS option (if omitted, the queue is limited by space
+## available in the back end filesystem).
+#
+  set eventqueue
+      basedir /var/lib/monit/events # set the base directory where events will be stored
+      slots 100                     # optionally limit the queue size
+#
+#
+## Send status and events to M/Monit (for more informations about M/Monit 
+## see http://mmonit.com/). By default Monit registers credentials with 
+## M/Monit so M/Monit can smoothly communicate back to Monit and you don't
+## have to register Monit credentials manually in M/Monit. It is possible to
+## disable credential registration using the commented out option below. 
+## Though, if safety is a concern we recommend instead using https when
+## communicating with M/Monit and send credentials encrypted.
+#
+# set mmonit http://monit:monit@192.168.1.10:8080/collector
+#     # and register without credentials     # Don't register credentials
+#
+#
+## Monit by default uses the following format for alerts if the the mail-format
+## statement is missing::
+## --8<--
+## set mail-format {
+##      from: monit@$HOST
+##   subject: monit alert --  $EVENT $SERVICE
+##   message: $EVENT Service $SERVICE
+##                 Date:        $DATE
+##                 Action:      $ACTION
+##                 Host:        $HOST
+##                 Description: $DESCRIPTION
+##
+##            Your faithful employee,
+##            Monit
+## }
+## --8<--
+##
+## You can override this message format or parts of it, such as subject
+## or sender using the MAIL-FORMAT statement. Macros such as $DATE, etc.
+## are expanded at runtime. For example, to override the sender, use:
+#
+# set mail-format { from: monit@foo.bar }
+#
+#
+## You can set alert recipients whom will receive alerts if/when a 
+## service defined in this file has errors. Alerts may be restricted on 
+## events by using a filter as in the second example below.
+#
+# set alert sysadm@foo.bar                       # receive all alerts
+#
+## Do not alert when Monit starts, stops or performs a user initiated action.
+## This filter is recommended to avoid getting alerts for trivial cases.
+#
+# set alert your-name@your.domain not on { instance, action }
+#
+#
+## Monit has an embedded HTTP interface which can be used to view status of 
+## services monitored and manage services from a web interface. The HTTP 
+## interface is also required if you want to issue Monit commands from the
+## command line, such as 'monit status' or 'monit restart service' The reason
+## for this is that the Monit client uses the HTTP interface to send these
+## commands to a running Monit daemon. See the Monit Wiki if you want to 
+## enable SSL for the web server. 
+#
+# set httpd port 2812 and
+#    use address localhost  # only accept connection from localhost
+#    allow localhost        # allow localhost to connect to the server and
+#    allow admin:monit      # require user 'admin' with password 'monit'
+#    allow @monit           # allow users of group 'monit' to connect (rw)
+#    allow @users readonly  # allow users of group 'users' to connect readonly
+#
+###############################################################################
+## Services
+###############################################################################
+##
+## Check general system resources such as load average, cpu and memory
+## usage. Each test specifies a resource, conditions and the action to be
+## performed should a test fail.
+#
+#  check system myhost.mydomain.tld
+#    if loadavg (1min) > 4 then alert
+#    if loadavg (5min) > 2 then alert
+#    if memory usage > 75% then alert
+#    if swap usage > 25% then alert
+#    if cpu usage (user) > 70% then alert
+#    if cpu usage (system) > 30% then alert
+#    if cpu usage (wait) > 20% then alert
+#
+#    
+## Check if a file exists, checksum, permissions, uid and gid. In addition
+## to alert recipients in the global section, customized alert can be sent to 
+## additional recipients by specifying a local alert handler. The service may 
+## be grouped using the GROUP option. More than one group can be specified by
+## repeating the 'group name' statement.
+#    
+#  check file apache_bin with path /usr/local/apache/bin/httpd
+#    if failed checksum and 
+#       expect the sum 8f7f419955cefa0b33a2ba316cba3659 then unmonitor
+#    if failed permission 755 then unmonitor
+#    if failed uid root then unmonitor
+#    if failed gid root then unmonitor
+#    alert security@foo.bar on {
+#           checksum, permission, uid, gid, unmonitor
+#        } with the mail-format { subject: Alarm! }
+#    group server
+#
+#    
+## Check that a process is running, in this case Apache, and that it respond
+## to HTTP and HTTPS requests. Check its resource usage such as cpu and memory,
+## and number of children. If the process is not running, Monit will restart 
+## it by default. In case the service is restarted very often and the 
+## problem remains, it is possible to disable monitoring using the TIMEOUT
+## statement. This service depends on another service (apache_bin) which
+## is defined above.
+#    
+#  check process apache with pidfile /usr/local/apache/logs/httpd.pid
+#    start program = "/etc/init.d/httpd start" with timeout 60 seconds
+#    stop program  = "/etc/init.d/httpd stop"
+#    if cpu > 60% for 2 cycles then alert
+#    if cpu > 80% for 5 cycles then restart
+#    if totalmem > 200.0 MB for 5 cycles then restart
+#    if children > 250 then restart
+#    if loadavg(5min) greater than 10 for 8 cycles then stop
+#    if failed host www.tildeslash.com port 80 protocol http 
+#       and request "/somefile.html"
+#    then restart
+#    if failed port 443 type tcpssl protocol http
+#       with timeout 15 seconds
+#    then restart
+#    if 3 restarts within 5 cycles then timeout
+#    depends on apache_bin
+#    group server
+#    
+#    
+## Check filesystem permissions, uid, gid, space and inode usage. Other services,
+## such as databases, may depend on this resource and an automatically graceful
+## stop may be cascaded to them before the filesystem will become full and data
+## lost.
+#
+#  check filesystem datafs with path /dev/sdb1
+#    start program  = "/bin/mount /data"
+#    stop program  = "/bin/umount /data"
+#    if failed permission 660 then unmonitor
+#    if failed uid root then unmonitor
+#    if failed gid disk then unmonitor
+#    if space usage > 80% for 5 times within 15 cycles then alert
+#    if space usage > 99% then stop
+#    if inode usage > 30000 then alert
+#    if inode usage > 99% then stop
+#    group server
+#
+#
+## Check a file's timestamp. In this example, we test if a file is older 
+## than 15 minutes and assume something is wrong if its not updated. Also,
+## if the file size exceed a given limit, execute a script
+#
+#  check file database with path /data/mydatabase.db
+#    if failed permission 700 then alert
+#    if failed uid data then alert
+#    if failed gid data then alert
+#    if timestamp > 15 minutes then alert
+#    if size > 100 MB then exec "/my/cleanup/script" as uid dba and gid dba
+#
+#
+## Check directory permission, uid and gid.  An event is triggered if the 
+## directory does not belong to the user with uid 0 and gid 0.  In addition, 
+## the permissions have to match the octal description of 755 (see chmod(1)).
+#
+#  check directory bin with path /bin
+#    if failed permission 755 then unmonitor
+#    if failed uid 0 then unmonitor
+#    if failed gid 0 then unmonitor
+#
+#
+## Check a remote host availability by issuing a ping test and check the 
+## content of a response from a web server. Up to three pings are sent and 
+## connection to a port and an application level network check is performed.
+#
+#  check host myserver with address 192.168.1.1
+#    if failed ping then alert
+#    if failed port 3306 protocol mysql with timeout 15 seconds then alert
+#    if failed port 80 protocol http
+#       and request /some/path with content = "a string"
+#    then alert
+#
+#
 
-apt-get update && apt-get upgrade -y
-apt-get install lib32gcc1 git screen monit lib32gcc1 -y
+## hopefully this will start the jc3mp server
+#
+#  check process apache with pidfile /usr/local/apache/logs/httpd.pid
+#    start program = "/etc/init.d/httpd start" with timeout 60 seconds    
 
-echo "Specify username"
-read username
-echo "Specify password"
-read password
-echo "Specify server description"
-read svdesc
-echo "Specify server ip"
-read ip
-echo "Specify server name"
-read svname
-echo "Specify admin steam id (get your steam id from http://steamidfinder.com/)"
-read adminsteamid
-echo "Specify server alias - use differnet names for multiple servers"
-read svalias
+#  check process jc3mpsmech with pidfile /home/steamuser/jc3mps/mech/jc3mpsmech.pid
+#  start program = "/bin/su steamuser -c 'cd /home/steamuser/jc3mps/mech/  && ./Server'"
 
-if id "$username" >/dev/null 2>&1; then
-        echo "user already exists"
-else
-        echo "creating user $username"
-        useradd -m -u 1337 -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
-fi
+#check process jc3mpsmech with pidfile /home/steamuser/jc3mps/mech/monitjc3mpsmech.pid
+#start program = "/bin/su steamuser -c '/home/steamuser/jc3mps/mech/monitjc3mpsmech.sh start'"
+#stop program = "/bin/su steamuser -c '/home/steamuser/jc3mps/mech/monitjc3mpsmech.sh stop'"
 
-if [ -d /home/'$username'/jc3mp/'$svalias' ]; then
-  echo "you already have a server with that alias"
-  exit 0
-fi
+#check process jc3mpsfriendship with pidfile /home/steamuser/jc3mps/friendship/monitjc3mpsfriendship.pid
+#start program = "/bin/su steamuser -c '/home/steamuser/jc3mps/friendship/monitjc3mpsfriendship.sh start'"
+#stop program = "/bin/su steamuser -c '/home/steamuser/jc3mps/friendship/monitjc3mpsfriendship.sh stop'"
 
+check process jc3mpsfriendship1 with pidfile /home/steamuser/jc3mps/friendly10/monitjc3mpsfriendship1.pid
+start program = "/bin/su steamuser -c '/home/steamuser/jc3mps/friendly10/monitjc3mpsfriendship1.sh start'"
+stop program = "/bin/su steamuser -c '/home/steamuser/jc3mps/friendly10/monitjc3mpsfriendship1.sh stop'"
 
-
-su "$username" -c "mkdir -p /home/'$username'/jc3mp/'$svalias'"
-
-if [ ! -d /home/'$username'/jc3mp/'$svalias' ]; then
-  su "$username" -c "mkdir -p /home/'$username'/steamcmd"
-  curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar -xzv -C /home/'$username'/steamcmd
-fi
-
-su "$username" -c "/home/'$username'/steamcmd/steamcmd +login anonymous +exit"
-su "$username" -c "/home/'$username'/steamcmd/steamcmd +login anonymous +force_install_dir /home/'$username'/jc3mp/"$svalias" +app_update 619960 validate +exit"
- 
-mkdir /home/"$username"/jc3mp/"$svalias"/packages
-cd /home/"$username"/jc3mp/"$svalias"/packages
-git clone https://gitlab.nanos.io/jc3mp-packages/spawn-menu
-git clone https://gitlab.nanos.io/jc3mp-packages/freeroam
-git clone https://gitlab.nanos.io/jc3mp-packages/command-hints
-git clone https://gitlab.nanos.io/jc3mp-packages/command-manager
-git clone https://gitlab.nanos.io/jc3mp-packages/chat
- 
-mkdir /home/"$username"/jc3mp/"$svalias"/monit
-git clone https://github.com/TarryPaloma/jc3mp-linux-server-monit /home/"$username"/jc3mp/"$svalias"/monit
-sed -i "s/NAME='replaceme'/NAME='$svalias'/" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
-sed -i "s/DIR=\/home\/'replaceme'\/jc3mp\/'replaceme'/DIR=\/home\/$username\/jc3mp\/$svalias/" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
-mv /home/"$username"/jc3mp/"$svalias"/monit/alias.sh /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh
-touch /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".pid /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".log
-
-cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
-{
-    "announce": true,
-    "description": "$svdesc",
-    "host": "$ip",
-    "httpPort": 4203,
-    "logLevel": 7,
-    "logo": "",
-    "maxPlayers": 32,
-    "maxTickRate": 60,
-    "name": "$svname",
-    "password": "",
-    "port": 4200,
-    "queryPort": 4201,
-    "requiredDLC": [],
-    "steamPort": 4202
-}
-EOF
-
-sed -i "/admins: \[/a \\\t'$adminsteamid'," /home/"$username"/jc3mp/"$svalias"/packages/freeroam/gm/config.js
-sed -i "/death_reasons: \[/a \\\t'tickled the belly of',\n \\t'popped a cherry in',\n \\t'fragged',\n \\t'mutilated',\n \\t'720 noscoped',\n \\t'gatted',\n \\t'bamboozled',\n \\t'mullered',\n \\t'inflicted mortal damage upon',\n \\t'erased',\n \\t'julienned',\n \\t'killded',\n \\t'punctured',\n \\t'perforated',\n \\t'deaded'," /home/"$username"/jc3mp/"$svalias"/packages/freeroam/gm/config.js
-
-cat >> /etc/monit/monitrc <<EOF
-check process jc3mpServer_$svalias with pidfile /home/$username/jc3mp/$svalias/monit/$svalias.pid
-start program = "/bin/su $username -c '/home/$username/jc3mp/$svalias/monit/$svalias.sh start'"
-stop program = "/bin/su $username -c '/home/$username/jc3mp/$svalias/monit/$svalias.sh stop'"
-EOF
-
-chown -R "$username":users /home/"$username"/jc3mp
-su "$username"
+###############################################################################
+## Includes
+###############################################################################
+##
+## It is possible to include additional configuration parts from other files or
+## directories.
+#
+   include /etc/monit/conf.d/*
+#
+check process jc3mpServer_delet with pidfile /home/deleteme/jc3mp/delet/monit/delet.pid
+start program = "/bin/su deleteme -c '/home/deleteme/jc3mp/delet/monit/delet.sh start'"
+stop program = "/bin/su deleteme -c '/home/deleteme/jc3mp/delet/monit/delet.sh stop'"
