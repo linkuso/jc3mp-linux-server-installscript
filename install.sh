@@ -12,6 +12,9 @@ echo "Specify server description"
 read svdesc
 echo "Specify server ip"
 read ip
+echo "Specify base port number. Each server needs 4 unique ports."
+echo "additional ports will be incremented from the base port, e.g. 4201, 4202, 4203"
+read -i "4200" -e baseport
 echo "Specify server name"
 read svname
 echo "Specify admin steam id (get your steam id from http://steamidfinder.com/)"
@@ -66,17 +69,17 @@ cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
     "announce": true,
     "description": "$svdesc",
     "host": "$ip",
-    "httpPort": 4203,
+    "httpPort": $((baseport + 3)),
     "logLevel": 7,
     "logo": "",
     "maxPlayers": 32,
     "maxTickRate": 60,
     "name": "$svname",
     "password": "",
-    "port": 4200,
-    "queryPort": 4201,
+    "port": $baseport,
+    "queryPort": $((baseport + 1)),
     "requiredDLC": [],
-    "steamPort": 4202
+    "steamPort": $((baseport + 2))
 }
 EOF
 
