@@ -4,9 +4,9 @@
 apt-get update && apt-get upgrade -y
 apt-get install lib32gcc1 git screen monit -y
 
-echo "Specify username"
+echo "Specify username to install under - can be a new or existing user - DO NOT use root"
 read username
-echo "Specify password"
+echo "Specify password if new user"
 read password
 echo "Specify server description"
 read svdesc
