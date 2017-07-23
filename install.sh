@@ -25,7 +25,7 @@ echo "Specify server password - leave blank for public"
 read svpwd
 echo "Advertise server? (true/false)"
 read svadvertise
-while [[ ! $svadvertise == true ] && [ ! $svadvertise == false ]]; do
+while [[ ! $svadvertise == true ]] && [[ ! $svadvertise == false ]]; do
     echo "Advertise server?"
     echo "Please enter true or false."
     read svadvertise
