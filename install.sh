@@ -4,42 +4,42 @@
 apt-get update && apt-get upgrade -y
 apt-get install lib32gcc1 git screen monit -y
 
-echo "Specify username to install under - can be a new or existing user - DO NOT use root"
+echo "### Specify username to install under - can be a new or existing user - DO NOT use root ###"
 read username
-echo "Specify password if new user"
+echo "### Specify password if new user ###"
 read password
-echo "Specify server description"
+echo "### Specify server description ###"
 read svdesc
-echo "Specify server ip"
+echo "### Specify server ip ###"
 read ip
-echo "Specify base port number. Each server needs 4 unique ports."
-echo "additional ports will be incremented from the base port, e.g. 4201, 4202, 4203"
+echo "### Specify base port number. Each server needs 4 unique ports. ###"
+echo "### additional ports will be incremented from the base port, e.g. 4201, 4202, 4203 ###"
 read -i "4200" -e baseport
-echo "Specify server name"
+echo "### Specify server name ###"
 read svname
-echo "Specify admin steam id (get your steam id from http://steamidfinder.com/)"
+echo "### Specify admin steam id (get your steam id from http://steamidfinder.com/) ###"
 read adminsteamid
-echo "Specify server alias - use differnet names for multiple servers"
+echo "### Specify server alias - use differnet names for multiple servers ###"
 read svalias
-echo "Specify server password - leave blank for public"
+echo "### Specify server password - leave blank for public ###"
 read svpwd
-echo "Advertise server? (true/false)"
+echo "### Advertise server? (true/false) ###"
 read svadvertise
 while [[ ! $svadvertise == true ]] && [[ ! $svadvertise == false ]]; do
-    echo "Advertise server?"
-    echo "Please enter true or false."
+    echo "### Advertise server? ###"
+    echo "### Please enter true or false. ###"
     read svadvertise
 done
 
 if id "$username" >/dev/null 2>&1; then
-        echo "user already exists"
+        echo "### User already exists ###"
 else
-        echo "creating user $username"
+        echo "### Creating user $username ###"
         useradd -m -g users -d /home/"$username" -s /bin/bash -p $(echo "$password" | openssl passwd -1 -stdin) "$username"
 fi
 
 if [ -d /home/'$username'/jc3mp/'$svalias' ]; then
-  echo "you already have a server with that alias"
+  echo "### You already have a server with that alias ###"
   exit 0
 fi
 
