@@ -21,6 +21,10 @@ echo "Specify admin steam id (get your steam id from http://steamidfinder.com/)"
 read adminsteamid
 echo "Specify server alias - use differnet names for multiple servers"
 read svalias
+echo "Specify server password - leave blank for public"
+read svpwd
+echo "Advertise server? (true/false)"
+read svadvertise
 
 if id "$username" >/dev/null 2>&1; then
         echo "user already exists"
@@ -66,7 +70,7 @@ touch /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".pid /home/"$username"/
 
 cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
 {
-    "announce": true,
+    "announce": $svadvertise,
     "description": "$svdesc",
     "host": "$ip",
     "httpPort": $((baseport + 3)),
@@ -75,7 +79,7 @@ cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
     "maxPlayers": 32,
     "maxTickRate": 60,
     "name": "$svname",
-    "password": "",
+    "password": "$svpwd",
     "port": $baseport,
     "queryPort": $((baseport + 1)),
     "requiredDLC": [],
