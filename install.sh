@@ -43,7 +43,7 @@ if [ ! -d /home/'$username'/jc3mp/'$svalias' ]; then
   su "$username" -c "curl -sqL 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar -xzv -C /home/$username/steamcmd"
     #su deleteme -c "curl -sqL 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar -xzv -C /home/deleteme/steamcmd"
 fi
-chmod 755 /home/"$username"/steamcmd/steamcmd.sh 
+chmod 754 /home/"$username"/steamcmd/steamcmd.sh 
 
 su "$username" -c "/home/'$username'/steamcmd/steamcmd.sh +login anonymous +exit"
 su "$username" -c "/home/'$username'/steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/'$username'/jc3mp/"$svalias" +app_update 619960 validate +exit"
@@ -61,7 +61,7 @@ git clone https://github.com/TarryPaloma/jc3mp-linux-server-monit /home/"$userna
 sed -i "s/NAME='replaceme'/NAME='$svalias'/" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
 sed -i "s/DIR=\/home\/'replaceme'\/jc3mp\/'replaceme'/DIR=\/home\/$username\/jc3mp\/$svalias/" /home/"$username"/jc3mp/"$svalias"/monit/alias.sh
 mv /home/"$username"/jc3mp/"$svalias"/monit/alias.sh /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh
-chmod 755 /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh
+chmod 754 /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".sh
 touch /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".pid /home/"$username"/jc3mp/"$svalias"/monit/"$svalias".log
 
 cat > /home/"$username"/jc3mp/"$svalias"/config.json <<EOF
