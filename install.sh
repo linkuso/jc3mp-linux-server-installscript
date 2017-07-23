@@ -2,7 +2,7 @@
 # init
 
 apt-get update && apt-get upgrade -y
-apt-get install lib32gcc1 git screen monit curl -y
+apt-get install lib32gcc1 git screen monit curl tar -y
 
 echo "### Specify username to install under - can be a new or existing user - DO NOT use root ###"
 read username
