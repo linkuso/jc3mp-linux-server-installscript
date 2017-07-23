@@ -19,7 +19,7 @@ echo "### Specify server name ###"
 read svname
 echo "### Specify admin steam id (get your steam id from http://steamidfinder.com/) ###"
 read adminsteamid
-echo "### Specify server alias - use differnet names for multiple servers ###"
+echo "### Specify server alias - a name to refer to this server by - use different names for multiple servers ###"
 read svalias
 echo "### Specify server password - leave blank for public ###"
 read svpwd
